@@ -4,14 +4,23 @@ services:
     container_name: postgres_limebank
     image: postgres:17
     ports:
-        - "5432:5432"
+      - "5432:5432"
     restart: always
     environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=limebank
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=limebank
+    networks:
+      - limebank_network
+
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
+    networks:
+      - limebank_network
+
+networks:
+  limebank_network:
+    driver: bridge
