@@ -1,16 +1,16 @@
 package com.cauamattosprj.limebank.domains.user.DAO;
 
 import com.cauamattosprj.limebank.domains.user.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public class UserDAO {
     private final JdbcTemplate jdbcTemplate;
 
@@ -19,7 +19,7 @@ public class UserDAO {
     }
 
     public User findByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND is_deleted = false";
         List<User> result = jdbcTemplate.query(sql, new UserRowMapper(), username);
         return result.getFirst();
     }
