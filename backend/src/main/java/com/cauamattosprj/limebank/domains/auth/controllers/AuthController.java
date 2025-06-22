@@ -1,6 +1,7 @@
 package com.cauamattosprj.limebank.domains.auth.controllers;
 
 import com.cauamattosprj.limebank.domains.auth.services.AuthService;
+import com.cauamattosprj.limebank.domains.common.dtos.ApiResponse;
 import com.cauamattosprj.limebank.domains.user.service.UserService;
 import com.cauamattosprj.limebank.utils.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AuthService.AuthRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<ApiResponse<Object>> register(@RequestBody AuthService.AuthRequest request) {
+        String result = authService.register(request);
+
+        return ResponseEntity.ok(ApiResponse.ofSuccess(result,200));
     }
 
     @PostMapping("/login")
