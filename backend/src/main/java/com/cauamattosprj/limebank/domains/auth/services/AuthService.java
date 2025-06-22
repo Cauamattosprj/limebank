@@ -1,5 +1,6 @@
 package com.cauamattosprj.limebank.domains.auth.services;
 
+import com.cauamattosprj.limebank.domains.auth.exceptions.EmailAlreadyExistsException;
 import com.cauamattosprj.limebank.domains.user.DAO.UserDAO;
 import com.cauamattosprj.limebank.domains.user.models.User;
 import com.cauamattosprj.limebank.domains.user.service.UserService;
@@ -10,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,17 @@ public class AuthService {
                 .role("USER")
                 .build();
 
-        userDAO.save(user);
+        try {
+            userDAO.save(user);
+        } catch (Exception e) {
+            if (e.getCause() instanceof SQLException) {
+                if (e.getMessage().contains("email")) {
+                    throw new EmailAlreadyExistsException("Email duplicado");
+                }
+            }
+
+            throw e;
+        }
 
         return jwtUtil.generateToken(user.getUsername(), user);
     }
