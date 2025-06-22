@@ -25,17 +25,18 @@ public class JwtUtil {
 
     public String generateToken(String username, User user) {
         Instant now = Instant.now();
-        Instant expiryDate = Instant.ofEpochMilli(Instant.now().toEpochMilli() + EXPIRATION_MS);
+        Instant expiryDate = now.plusMillis(EXPIRATION_MS);
 
         return Jwts.builder()
                 .subject(username)
                 .claim("userId", user.getCustomer_id())
                 .claim("role", user.getRole())
-                .issuedAt(new Date(now.toString()))
-                .expiration(new Date(expiryDate.toString()))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiryDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public String extractUsername(String token) {
         return Jwts.parser()
