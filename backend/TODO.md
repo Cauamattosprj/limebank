@@ -1,0 +1,7 @@
+- [ ] Create the database
+- [ ] Implement JWT stateless auth
+  - [X] Register user and return an JWT
+- [ ] Create DAOs for domains
+  - [ ] Create and treat exceptions in Auth 
+  - [ ] Create the necessary queries and logic for support the necessary relations and operations
+- [ ] Create models for domains;
