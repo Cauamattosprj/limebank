@@ -18,11 +18,29 @@ public class UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public User save(User user) {
+        String sql = "INSERT INTO users (id, email, password, role_id) VALUES (?, ?, ?, ?)";
+        int roleId = getUserRoleId();
+        UUID userId = UUID.randomUUID();
+        user.setId(userId);
+
+        jdbcTemplate.update(sql, userId, user.getEmail(), user.getPassword(), roleId);
+
+        return user;
+    }
+
+
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ? AND is_deleted = false";
         List<User> result = jdbcTemplate.query(sql, new UserRowMapper(), username);
         return result.getFirst();
     }
+
+    public int getUserRoleId() {
+        String sql = "SELECT id FROM roles WHERE role = 'USER'";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
 
     private static class UserRowMapper implements RowMapper<User> {
 
