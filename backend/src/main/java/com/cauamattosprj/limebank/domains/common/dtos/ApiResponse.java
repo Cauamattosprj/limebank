@@ -2,7 +2,6 @@ package com.cauamattosprj.limebank.domains.common.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.lang.NonNull;
 
 import java.time.Instant;
 

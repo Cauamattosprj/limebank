@@ -1,4 +1,6 @@
-- [ ] Create the database
+- [x] Create the database
+- [x] Create a wrapper for API responses
+- [x] Add exception handling
 - [ ] Implement JWT stateless auth
   - [X] Register user and return an JWT
 - [ ] Create DAOs for domains

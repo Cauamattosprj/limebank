@@ -6,11 +6,14 @@ import com.cauamattosprj.limebank.domains.user.models.User;
 import com.cauamattosprj.limebank.domains.user.service.UserService;
 import com.cauamattosprj.limebank.utils.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 
@@ -43,12 +46,20 @@ public class AuthService {
             throw e;
         }
 
-        return jwtUtil.generateToken(user.getUsername(), user);
+        return jwtUtil.generateToken(userDAO.getUserByEmail(request.email()));
     }
 
     public String login(AuthRequest request) {
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
-        return jwtUtil.generateToken(auth.getName(), userService.loadUserByUsername(auth.getName()));
+            return jwtUtil.generateToken(userDAO.getUserByEmail(request.email()));
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+        } catch (Exception e){
+                System.out.println("Erro ao autenticar: " + e.getMessage());
+                throw e; // ou lançar uma exception customizada
+        }
     }
 }

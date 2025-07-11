@@ -23,13 +23,13 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username, User user) {
+    public String generateToken(User user) {
         Instant now = Instant.now();
         Instant expiryDate = now.plusMillis(EXPIRATION_MS);
 
         return Jwts.builder()
-                .subject(username)
-                .claim("userId", user.getCustomer_id())
+                .subject(user.getEmail())
+                .claim("userId", user.getId())
                 .claim("role", user.getRole())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiryDate))

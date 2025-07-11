@@ -15,10 +15,18 @@ public class UserService implements UserDetailsService {
         this.userDAO = userDAO;
     }
 
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User getUserByEmail(String email) {
         try {
-            return userDAO.findByUsername(username);
+            return userDAO.getUserByEmail(email);
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Usuário não encontrado no banco");
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername (String email) {
+        try {
+            return userDAO.getUserByEmail(email);
         } catch (Exception e) {
             throw new UsernameNotFoundException("Usuário não encontrado");
         }
