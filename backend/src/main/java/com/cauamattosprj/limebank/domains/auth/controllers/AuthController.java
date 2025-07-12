@@ -30,11 +30,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthService.AuthRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<ApiResponse<Object>> login(@RequestBody AuthService.AuthRequest request) {
+        return ResponseEntity.ok(ApiResponse.ofSuccess(authService.login(request), 200));
     }
-
-//    public record AuthRequest(String email, String password) {}
-
 }
 

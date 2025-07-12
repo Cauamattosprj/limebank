@@ -1,6 +1,7 @@
 package com.cauamattosprj.limebank.domains.auth.services;
 
 import com.cauamattosprj.limebank.domains.auth.exceptions.EmailAlreadyExistsException;
+import com.cauamattosprj.limebank.domains.auth.exceptions.InvalidCredentials;
 import com.cauamattosprj.limebank.domains.user.DAO.UserDAO;
 import com.cauamattosprj.limebank.domains.user.models.User;
 import com.cauamattosprj.limebank.domains.user.service.UserService;
@@ -39,7 +40,7 @@ public class AuthService {
         } catch (Exception e) {
             if (e.getCause() instanceof SQLException) {
                 if (e.getMessage().contains("email")) {
-                    throw new EmailAlreadyExistsException("Email duplicado");
+                    throw new EmailAlreadyExistsException();
                 }
             }
 
@@ -56,7 +57,7 @@ public class AuthService {
 
             return jwtUtil.generateToken(userDAO.getUserByEmail(request.email()));
         } catch (BadCredentialsException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+            throw new InvalidCredentials();
         } catch (Exception e){
                 System.out.println("Erro ao autenticar: " + e.getMessage());
                 throw e; // ou lançar uma exception customizada
