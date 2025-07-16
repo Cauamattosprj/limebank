@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCredentials.class)
     public ResponseEntity<ApiResponse<Object>> handleInvalidCredentials(InvalidCredentials ex) {
-        ApiResponse<Object> response = ApiResponse.ofError("Credenciais Inválidas", HttpStatus.FORBIDDEN.value());
+        ApiResponse<Object> response = ApiResponse.ofError(ex.getMessage(), HttpStatus.FORBIDDEN.value());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
