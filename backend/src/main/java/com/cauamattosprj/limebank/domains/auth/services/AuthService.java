@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +63,25 @@ public class AuthService {
         } catch (Exception e){
                 System.out.println("Erro ao autenticar: " + e.getMessage());
                 throw e; // ou lançar uma exception customizada
+        }
+    }
+
+    public Map<String, String> refresh(Map<String, String> header) {
+        try {
+            String cookie = header.get("cookie");
+            String currentRefreshToken = cookie.split("=")[1];
+            System.out.println("currentRefreshToken = " + currentRefreshToken);
+            String username = jwtUtil.extractUsername(currentRefreshToken);
+            System.out.println("username = " + username);
+
+            if (jwtUtil.isTokenValid(currentRefreshToken)) {
+                Map<String, String> map = Map.of("refreshToken",jwtUtil.generateToken(userDAO.getUserByEmail(username)));
+                return map;
+            }
+            throw new InvalidCredentials("Refresh token inválido");
+
+        } catch (Exception e) {
+            throw new InvalidCredentials("refresh token inválido ou malformado");
         }
     }
 }

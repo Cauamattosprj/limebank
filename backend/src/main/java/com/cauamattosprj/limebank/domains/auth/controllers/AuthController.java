@@ -9,10 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +31,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<Object>> login(@RequestBody AuthService.AuthRequest request) {
         return ResponseEntity.ok(ApiResponse.ofSuccess(authService.login(request), 200));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<Object>> refresh(@RequestHeader Map<String, String> header) {
+        return ResponseEntity.ok(ApiResponse.ofSuccess(authService.refresh(header), 200));
     }
 }
 
