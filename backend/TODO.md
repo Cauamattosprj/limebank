@@ -3,6 +3,40 @@
 - [x] Add exception handling
 - [ ] Implement JWT stateless auth
   - [X] Register user and return an JWT
+  - [X] User is able to login and receives an JWT
+  - [ ] Add an expiration time for JWT, for users not being able to regenerate JWT everytime they want
+    - [ ] Validate the token and grants that when the expiration is surpassed, deny it.
+    - [ ] Implement refresh tokens on login flow
+      - [X] Add refresh_token table on database
+      - [ ] Add refresh token route with validation
+      - [ ] Hash the refresh token before adding it to the database
+      - [ ] Insert refresh tokens on refresh_tokens table
+      - [ ] Refresh token route response contains an refreshToken on setCookie and the accessToken (JWT) on body
+        - [ ] JWT on body
+        - [ ] Refresh token on setCookie header
+      - [ ] Implement forced logout when refresh token is invalid
+      - [ ] Verify if the refreshToken is revoked on database
+  - [ ] Make JWT accessToken 15 minutes expiration time
+  - [ ] Make hashed UUID refreshToken 1 week expiration time
+  - [ ] Fix the JwtUtil for read the secret environment variable
+  - Summary:
+  - [ ] User can make a request with username and password on login route
+  - [ ] The login route answer with:
+    - [ ] JWT access token on body
+    - [ ] hashed UUID refresh token on setCookie
+  On front-end:
+    - [ ] After the login response:
+      - [ ] accessToken is saved on application memory
+      - [ ] accessToken is used to every call on protected API routes
+      - [ ] refreshToken is set on httpOnly, secure, sameSite=strict or lax cookie
+      - [ ] after accessToken expires, the application make a requisition on /refresh route, sending the refreshToken on cookie
+        - [ ] refresh route receives the refreshToken and check if its valid
+          - [ ] verify if its valid on expiration time
+          - [ ] verify if its valid on database
+        - [ ] if its not valid, forward the user to make login again
+        - [ ] if its valid, send a new access token on requisition body
+        - [ ] on front-end, receives the new accessToken and replace the expired one.
+      - [ ] use accessToken on every protected API routes
 - [ ] Create DAOs for domains
   - [ ] Create and treat exceptions in Auth 
   - [ ] Create the necessary queries and logic for support the necessary relations and operations
